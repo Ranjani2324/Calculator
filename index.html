@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>NeonCalc</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- Background Effects -->
+  <canvas id="particles"></canvas>
+  <div class="symbols"></div>
+
+  <!-- Calculator -->
+  <div class="calculator">
+    <h1 class="app-title">CALCULATOR</h1>
+    <input type="text" id="display" disabled />
+    <div class="buttons">
+      <button onclick="press('sin(')">sin</button>
+      <button onclick="press('cos(')">cos</button>
+      <button onclick="press('tan(')">tan</button>
+      <button onclick="press('Math.PI')">π</button>
+
+      <button onclick="press('Math.log10(')">log</button>
+      <button onclick="press('Math.log(')">ln</button>
+      <button onclick="press('Math.sqrt(')">√</button>
+      <button onclick="press('^')">^</button>
+
+      <button onclick="press('(')">(</button>
+      <button onclick="press(')')">)</button>
+      <button onclick="press('%')">%</button>
+      <button onclick="clearDisplay()">C</button>
+
+      <button onclick="press('7')">7</button>
+      <button onclick="press('8')">8</button>
+      <button onclick="press('9')">9</button>
+      <button onclick="press('/')">/</button>
+
+      <button onclick="press('4')">4</button>
+      <button onclick="press('5')">5</button>
+      <button onclick="press('6')">6</button>
+      <button onclick="press('*')">*</button>
+
+      <button onclick="press('1')">1</button>
+      <button onclick="press('2')">2</button>
+      <button onclick="press('3')">3</button>
+      <button onclick="press('-')">-</button>
+
+      <button onclick="press('0')">0</button>
+      <button onclick="press('.')">.</button>
+      <button onclick="calculate()">=</button>
+      <button onclick="press('+')">+</button>
+    </div>
+    <div id="history" class="history"></div>
+  </div>
+
+  <!-- Background Scripts -->
+  <script>
+    const canvas = document.getElementById("particles");
+    const ctx = canvas.getContext("2d");
+    let w = (canvas.width = window.innerWidth);
+    let h = (canvas.height = window.innerHeight);
+    let particles = [];
+
+    for (let i = 0; i < 100; i++) {
+      particles.push({
+        x: Math.random() * w,
+        y: Math.random() * h,
+        r: Math.random() * 2 + 1,
+        dx: (Math.random() - 0.5) * 0.3,
+        dy: (Math.random() - 0.5) * 0.3,
+      });
+    }
+
+    function drawParticles() {
+      ctx.clearRect(0, 0, w, h);
+      ctx.fillStyle = `hsla(${Math.floor(Math.random() * 360)}, 100%, 70%, 0.6)`;
+      for (let p of particles) {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fill();
+        p.x += p.dx;
+        p.y += p.dy;
+
+        if (p.x < 0 || p.x > w) p.dx *= -1;
+        if (p.y < 0 || p.y > h) p.dy *= -1;
+      }
+      requestAnimationFrame(drawParticles);
+    }
+
+    drawParticles();
+    window.addEventListener("resize", () => {
+      w = canvas.width = window.innerWidth;
+      h = canvas.height = window.innerHeight;
+    });
+
+    const symbols = ["π", "∑", "∞", "∫", "√", "±", "×", "÷", "∆", "≠"];
+    const colors = ["cyan", "magenta", "yellow", "lime", "white", "deepskyblue"];
+    const container = document.querySelector(".symbols");
+
+    for (let i = 0; i < 40; i++) {
+      const span = document.createElement("span");
+      const color = colors[Math.floor(Math.random() * colors.length)];
+      span.classList.add("symbol");
+      span.innerText = symbols[Math.floor(Math.random() * symbols.length)];
+      span.style.color = color;
+      span.style.textShadow = `0 0 8px ${color}`;
+      span.style.top = `${Math.random() * 100}%`;
+      span.style.left = `${Math.random() * 100}%`;
+      span.style.position = 'absolute';
+      span.style.fontSize = `${Math.random() * 30 + 20}px`;
+      span.style.animation = `floatSymbol ${10 + Math.random() * 20}s ease-in-out infinite alternate`;
+      container.appendChild(span);
+    }
+  </script>
+
+  <script src="script.js"></script>
+</body>
+</html>
